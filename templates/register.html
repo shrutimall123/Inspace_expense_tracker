@@ -1,0 +1,117 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+
+{% block content %}
+<div class="register-form">
+    <h2>Register for Expense Tracker</h2>
+    <form method="post" id="registrationForm" onsubmit="return validateForm()">
+        {% csrf_token %}
+        {{ form.as_p }} <!-- Assuming form is properly structured in your Django form -->
+        <button type="submit" class="btn">Register</button>
+    </form>
+</div>
+
+<!-- CSS Styles -->
+<style>
+   body {
+    background-color: #ffebee; /* Light coral background color */
+    font-family: Arial, sans-serif; /* Improved font for readability */
+}
+
+
+    .register-form {
+        max-width: 450px; /* Increased max width */
+        margin: 80px auto; /* Center the form vertically and horizontally */
+        padding: 30px;
+        border: 1px solid #ccc; /* Light gray border */
+        border-radius: 10px; /* Rounded corners */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
+        background-color: #ffffff; /* White background for the form */
+        transition: transform 0.3s; /* Smooth transition for hover effect */
+    }
+
+    .register-form:hover {
+        transform: scale(1.02); /* Slightly enlarge on hover */
+    }
+
+    .register-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333; /* Dark text for contrast */
+        font-size: 1.8rem; /* Larger heading font size */
+    }
+
+    .register-form form {
+        display: flex;
+        flex-direction: column; /* Stack inputs vertically */
+    }
+
+    .register-form input[type="text"],
+    .register-form input[type="email"],
+    .register-form input[type="password"] {
+        padding: 12px; /* Increased padding for inputs */
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px; /* Slightly more rounded corners */
+        transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transitions */
+    }
+
+    .register-form input[type="text"]:focus,
+    .register-form input[type="email"]:focus,
+    .register-form input[type="password"]:focus {
+        border-color: #007bff; /* Change border color on focus */
+        outline: none; /* Remove default outline */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Shadow effect on focus */
+    }
+
+    .btn {
+        background-color: #007bff; /* Blue button color */
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px; /* Slightly rounded corners */
+        cursor: pointer;
+        font-size: 1.1rem; /* Larger font size for button */
+        transition: background-color 0.3s, transform 0.2s; /* Smooth color change */
+        width: 100%; /* Full width button */
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: translateY(-2px); /* Lift effect on hover */
+    }
+
+    .error {
+        color: red; /* Red color for error messages */
+        margin-top: 10px;
+        font-size: 0.9rem; /* Smaller font size for error messages */
+    }
+</style>
+
+<!-- JavaScript for form validation -->
+<script>
+    function validateForm() {
+        const form = document.getElementById('registrationForm');
+        const inputs = form.querySelectorAll('input');
+        let valid = true;
+
+        // Clear previous error messages
+        const errorDivs = form.querySelectorAll('.error');
+        errorDivs.forEach(div => div.remove());
+
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                valid = false;
+                input.classList.add('error-input'); // Add error class for styling
+                const errorMessage = document.createElement('div');
+                errorMessage.classList.add('error');
+                errorMessage.innerText = `${input.placeholder} is required.`; // Display error message
+                input.parentElement.appendChild(errorMessage);
+            } else {
+                input.classList.remove('error-input'); // Remove error class if valid
+            }
+        });
+
+        return valid; // Return true if all fields are valid
+    }
+</script>
+{% endblock %}

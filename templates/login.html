@@ -1,0 +1,129 @@
+{% comment %} {% extends 'base.html' %} {% endcomment %}
+
+{% block content %}
+<div class="login-container">
+    <div class="login-form">
+        <h2>Login</h2>
+        {% if error_message %}
+            <div class="alert alert-danger">{{ error_message }}</div>
+        {% endif %}
+        <form method="POST" action="{% url 'login' %}" id="loginForm" onsubmit="return validateForm()">
+            {% csrf_token %}
+            <div class="mb-3">
+                <label for="username" class="form-label">Username</label>
+                <input type="text" class="form-control" id="username" name="username" required placeholder="Username">
+            </div>
+            <div class="mb-3">
+                <label for="password" class="form-label">Password</label>
+                <input type="password" class="form-control" id="password" name="password" required placeholder="Password">
+            </div>
+            <button type="submit" class="btn btn-primary">Login</button>
+        </form>
+    </div>
+</div>
+
+<!-- CSS Styles -->
+<style>
+    body {
+        background: linear-gradient(to bottom right, #74ebd5, #9face6); /* Gradient background */
+        height: 100vh; /* Full viewport height */
+        display: flex; /* Flexbox for centering */
+        align-items: center; /* Center vertically */
+        justify-content: center; /* Center horizontally */
+        margin: 0; /* Remove default margin */
+    }
+
+    .login-container {
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        width: 100%;
+        height: 100%;
+    }
+
+    .login-form {
+        max-width: 500px; /* Increase max-width for a larger form */
+        width: 100%; /* Make form responsive */
+        padding: 30px; /* Increased padding */
+        border: 1px solid #ddd;
+        border-radius: 10px; /* More rounded corners */
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.2); /* Deeper shadow */
+        background-color: rgba(255, 255, 255, 0.95); /* White background with slight transparency */
+    }
+
+    .login-form h2 {
+        text-align: center;
+        margin-bottom: 20px;
+        color: #333; /* Dark text for contrast */
+        font-family: 'Arial', sans-serif;
+        font-size: 2rem; /* Larger font size for the heading */
+    }
+
+    .login-form .form-label {
+        margin-bottom: 5px;
+        color: #333; /* Dark text for label */
+    }
+
+    .login-form .form-control {
+        padding: 12px; /* Increased padding for inputs */
+        margin-bottom: 15px;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        transition: border-color 0.3s, box-shadow 0.3s; /* Smooth transition for border color */
+    }
+
+    .login-form .form-control:focus {
+        border-color: #007bff; /* Change border color on focus */
+        outline: none; /* Remove default outline */
+        box-shadow: 0 0 5px rgba(0, 123, 255, 0.5); /* Shadow effect on focus */
+    }
+
+    .btn {
+        background-color: #007bff; /* Blue button color */
+        color: white;
+        padding: 12px;
+        border: none;
+        border-radius: 5px;
+        cursor: pointer;
+        transition: background-color 0.3s, transform 0.2s; /* Smooth color change */
+        width: 100%; /* Make button full-width */
+        font-size: 1.1rem; /* Slightly larger font size */
+    }
+
+    .btn:hover {
+        background-color: #0056b3; /* Darker blue on hover */
+        transform: translateY(-2px); /* Lift effect on hover */
+    }
+
+    .error {
+        color: red; /* Red color for error messages */
+        margin-top: 10px;
+        font-size: 0.9rem; /* Slightly smaller font for error messages */
+    }
+</style>
+
+<!-- JavaScript for form validation -->
+<script>
+    function validateForm() {
+        const form = document.getElementById('loginForm');
+        const inputs = form.querySelectorAll('input');
+        let valid = true;
+
+        // Clear previous error messages
+        const errorDivs = form.querySelectorAll('.error');
+        errorDivs.forEach(div => div.remove());
+
+        inputs.forEach(input => {
+            if (input.value.trim() === '') {
+                valid = false;
+                const errorMessage = document.createElement('div');
+                errorMessage.classList.add('error');
+                errorMessage.innerText = `${input.placeholder} is required.`; // Display error message
+                input.parentElement.appendChild(errorMessage);
+            }
+        });
+
+        return valid; // Return true if all fields are valid
+    }
+</script>
+{% endblock %}

@@ -1,0 +1,152 @@
+
+{% load crispy_forms_tags %}
+
+{% block extra_head %}
+<style>
+    body {
+        background: linear-gradient(120deg, #84fab0 0%, #8fd3f4 100%);
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        font-family: 'Arial', sans-serif;
+    }
+
+    .container {
+        background-color: rgba(255, 255, 255, 0.9);
+        border-radius: 15px;
+        box-shadow: 0 0 20px rgba(0,0,0,0.1);
+        padding: 30px;
+        max-width: 500px;
+        width: 100%;
+    }
+
+    h2 {
+        color: #2c3e50;
+        text-align: center;
+        margin-bottom: 30px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 2px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    label {
+        font-weight: bold;
+        color: #34495e;
+    }
+
+    .form-control {
+        border-radius: 20px;
+        border: 2px solid #bdc3c7;
+        padding: 10px 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-control:focus {
+        border-color: #3498db;
+        box-shadow: 0 0 0 0.2rem rgba(52, 152, 219, 0.25);
+    }
+
+    .btn-primary {
+        background-color: #3498db;
+        border: none;
+        border-radius: 20px;
+        padding: 10px 20px;
+        font-weight: bold;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+        transition: all 0.3s ease;
+    }
+
+    .btn-primary:hover {
+        background-color: #2980b9;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 6px rgba(0,0,0,0.1);
+    }
+
+    .category-icons {
+        display: flex;
+        justify-content: center;
+        margin-bottom: 20px;
+    }
+
+    .category-icon {
+        font-size: 24px;
+        margin: 0 10px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .category-icon:hover {
+        transform: scale(1.2);
+    }
+
+    .selected {
+        color: #3498db;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <h2>Add Expense</h2>
+    <div class="category-icons">
+        <i class="fas fa-shopping-cart category-icon" data-category="Shopping"></i>
+        <i class="fas fa-utensils category-icon" data-category="Food"></i>
+        <i class="fas fa-home category-icon" data-category="Housing"></i>
+        <i class="fas fa-car category-icon" data-category="Transportation"></i>
+        <i class="fas fa-heartbeat category-icon" data-category="Healthcare"></i>
+    </div>
+    <form method="post" id="expenseForm">
+        {% csrf_token %}
+        {{ form|crispy }}
+        <button type="submit" class="btn btn-primary btn-block">Add Expense</button>
+    </form>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/js/all.min.js"></script>
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const categoryIcons = document.querySelectorAll('.category-icon');
+    const categoryInput = document.querySelector('#id_category');
+
+    categoryIcons.forEach(icon => {
+        icon.addEventListener('click', function() {
+            categoryIcons.forEach(i => i.classList.remove('selected'));
+            this.classList.add('selected');
+            categoryInput.value = this.dataset.category;
+        });
+    });
+
+    const form = document.getElementById('expenseForm');
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    form.addEventListener('submit', function(e) {
+        e.preventDefault();
+        submitButton.disabled = true;
+        submitButton.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Adding...';
+
+        // Simulate form submission delay
+        setTimeout(() => {
+            form.submit();
+        }, 1000);
+    });
+
+    // Add animation to form inputs
+    const inputs = form.querySelectorAll('.form-control');
+    inputs.forEach(input => {
+        input.addEventListener('focus', function() {
+            this.parentElement.style.transform = 'translateY(-5px)';
+        });
+        input.addEventListener('blur', function() {
+            this.parentElement.style.transform = 'translateY(0)';
+        });
+    });
+});
+</script>
+{% endblock %}
